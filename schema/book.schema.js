@@ -23,7 +23,7 @@ const Book = new Schema({
         
     },
     publishedYear: {
-        type: Date,
+        type: Number,
         required: true
     },
     publishedHome: {
@@ -34,12 +34,29 @@ const Book = new Schema({
         type: String,
         required: true
     },  
+    period: {
+        type: String,
+        required: true,
+        enum: {
+         values: ["Temuriylar davri" , "Jadid davri","Sovet davri","Mustaqillik davri"],
+         message: "{VALUE} bunday qiymat qabul qilinmaydi"
+        }
+    }, 
      genre : {
         type: String,
-        required: true
+        required: true,
+        enum: {
+        values: ["Comedy" , "Romance","Thriller","Horror","Tragediya","Action","Documantary","Science fiction","Fantasy","History"],
+        message: "{VALUE} bunday qiymat qabul qilinmaydi"
+    }
     },
     imageUrl : {
         type: String,
+        required: true
+    },
+    authorInfo: {
+        type: Schema.Types.ObjectId,
+        ref: "author",
         required: true
     }
 

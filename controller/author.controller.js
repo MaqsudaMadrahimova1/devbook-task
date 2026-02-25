@@ -1,32 +1,48 @@
 const AuthorSchema = require("../schema/author.schema")
 
-const getAllAuthors = async (req, res) => {
+const getAllAuthors = async (req, res,next ) => {
     try {
         const author = await AuthorSchema.find();
         return res.status(200).json(author)
     } catch {
-        return res.status(500).json({ message: error.message })
+     next(error)
     }
 }
-const getOneAuthor = async (req, res) => {
+
+
+const search = async (req, res,next) => {
+    try {
+        const { seachingvalue } = req.query
+        const result = await AuthorSchema.find({
+            $or: [
+                { fullName: { $regex: seachingvalue, $options: "i" } },
+                { bio: { $regex: seachingvalue, $options: "i" } },
+                { period: { $regex: seachingvalue, $options: "i" } }
+            ]
+        });
+
+        return res.status(200).json(author)
+    } catch {
+        next(error)
+    }
+}
+const getOneAuthor = async (req, res,next) => {
     try {
 
         const { id } = req.params
 
         const foundedAuthor = await AuthorSchema.findById(id)
         if (!foundedAuthor) {
-            return res.status(404).json({
-                message: "Author not found"
-            })
+    throw 
         }
 
 
         res.status(200).json(foundedAuthor)
     } catch {
-        return res.status(500).json({ message: error.message })
+        next(error)
     }
 }
-const addAuthor = async (req, res) => {
+const addAuthor = async (req, res,next) => {
     try {
         const { fullName, birthDate, deathDate, period, bio, work } = req.body
         await AuthorSchema.create({ fullName, birthDate, deathDate, period, bio, work })
@@ -38,10 +54,10 @@ const addAuthor = async (req, res) => {
             const messages = Object.values(error.errors).map(err => err.message);
             return res.status(400).json({ errors: messages });
         }
-        return res.status(500).json({ message: error.message });
+        next(error)
     }
 }
-const updateAuthor = async (req, res) => {
+const updateAuthor = async (req, res,next) => {
     try {
 
         const { fullName, birthDate, deathDate, period, bio, work } = req.body
@@ -59,10 +75,10 @@ const updateAuthor = async (req, res) => {
             message: "Update author"
         })
     } catch {
-        return res.status(500).json({ message: error.message })
+        next(error)
     }
 }
-const deleteAuthor = async (req, res) => {
+const deleteAuthor = async (req, res,next) => {
     try {
 
         const { id } = req.params
@@ -78,7 +94,7 @@ const deleteAuthor = async (req, res) => {
             message: "Delete author"
         })
     } catch {
-        return res.status(500).json({ message: error.message })
+        next(error)
     }
 }
 module.exports = {
@@ -86,5 +102,6 @@ module.exports = {
     getOneAuthor,
     addAuthor,
     updateAuthor,
-    deleteAuthor
+    deleteAuthor,
+    search
 }
