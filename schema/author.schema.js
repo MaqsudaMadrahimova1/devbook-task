@@ -3,7 +3,17 @@ const { Schema,model } = require("mongoose");
 const Author = new Schema({
     fullName: {
         type: String,
-        required: true
+        trim: true,
+        lowercase: true,
+        required: [true, "fullName berilishi kerak"],
+        minlength: [3, "fullName kamida 3 tadan kam  bo'lishi kerak"],
+        maxlength: [50, "fullName 50 dan  uzun bo'lmasligi kerak"],
+        // validate: {
+        //     validator: function(v) {
+        //         return typeof v === "string" && v.trim().length >= 3; 
+        //     },
+        //     message: "fullName kamida 3 ta belgidan iborat bo'lishi kerak "
+        // }
     },
     birthDate: {
         type: Date,
@@ -15,7 +25,8 @@ const Author = new Schema({
     },
     period: {
         type: String,
-        required: true
+        required: true,
+
     },
     bio: {
         type: String,

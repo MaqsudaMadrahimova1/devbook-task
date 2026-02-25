@@ -3,11 +3,24 @@ const { Schema,model } = require("mongoose");
 const Book = new Schema({
     title: {
         type: String,
-        required: true
+        required: true,
+        minLength: 3,
+        trim: true,
+        maxLength: 200,
+        lowercase: true,
+        // validate: {
+        //     validator: function(v) {
+        //         return typeof v === "string" && v.trim().length >= 3; 
+        //     },
+        //     message: "fullName kamida 3 ta belgidan iborat bo'lishi kerak (trim bilan tekshirildi)"
+        // }
     },
     pages: {
         type: Number,
-        required: true
+        required: true,
+        min: [3, "kamida 3 bo'lishi kerak"],
+        max: [1000,"1000 dan ko'p bo'lmasin"]
+        
     },
     publishedYear: {
         type: Date,
