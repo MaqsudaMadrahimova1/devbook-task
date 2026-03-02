@@ -46,7 +46,7 @@ const Book = new Schema({
         type: String,
         required: true,
         enum: {
-        values: ["Comedy" , "Romance","Thriller","Horror","Tragediya","Action","Documantary","Science fiction","Fantasy","History"],
+        values: ["Comedy" , "Romance","Thriller","Horror","Tragediya","Action","Documentary","Science fiction","Fantasy","History"],
         message: "{VALUE} bunday qiymat qabul qilinmaydi"
     }
     },

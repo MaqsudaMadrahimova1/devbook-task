@@ -1,3 +1,4 @@
+const CustomErrorHandler = require("../error/custom-error.handler");
 const AuthorSchema = require("../schema/author.schema")
 
 const getAllAuthors = async (req, res,next ) => {
@@ -33,7 +34,7 @@ const getOneAuthor = async (req, res,next) => {
 
         const foundedAuthor = await AuthorSchema.findById(id)
         if (!foundedAuthor) {
-    throw 
+    throw CustomErrorHandler.NotFound("Author not found")
         }
 
 
@@ -66,9 +67,7 @@ const updateAuthor = async (req, res,next) => {
 
         const foundedAuthor = await AuthorSchema.findById(id)
         if (!foundedAuthor) {
-            return res.status(404).json({
-                message: "Author not found"
-            })
+       throw CustomErrorHandler.NotFound("Author not found")
         }
         await AuthorSchema.findByIdAndUpdate(id, { fullName, birthDate, deathDate, period, bio, work })
         res.status(200).json({
@@ -85,9 +84,7 @@ const deleteAuthor = async (req, res,next) => {
 
         const foundedAuthor = await AuthorSchema.findById(id)
         if (!foundedAuthor) {
-            return res.status(404).json({
-                message: "Author not found"
-            })
+            throw CustomErrorHandler.NotFound("Author not found")
         }
         await AuthorSchema.findByIdAndDelete(id)
         res.status(200).json({
