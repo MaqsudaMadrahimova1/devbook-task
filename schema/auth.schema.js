@@ -30,6 +30,9 @@ username: {
     type: String,
     default: "user"
     },
+    avatar: 
+    { type: String, 
+    default: "" },
 
     otp: {
         type: String,

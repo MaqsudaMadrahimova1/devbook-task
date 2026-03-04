@@ -2,6 +2,7 @@ const CustomErrorHandler = require("../error/custom-error.handler")
 const AuthSchema = require("../schema/auth.schema")
 const { access_token } = require("../utils/jwt")
 const sendMessage = require("../utils/send-email")
+const bcrypt = require("bcrypt");
 
 const register = async (req, res,next ) => {
     try {
@@ -15,7 +16,7 @@ const register = async (req, res,next ) => {
 
 
       await sendMessage(code,email)
-      await AuthSchema.create({
+      const newUser = await AuthSchema.create({
         username,
         email,
         password,
@@ -30,7 +31,7 @@ const register = async (req, res,next ) => {
 }
 const verify = async (req, res,next ) => {
     try {
-        const {email,password} = req.body
+        const {email,code} = req.body
         const foundedUser = await AuthSchema.find({email})
         if(!foundedUser){
             throw CustomErrorHandler.BadRequest("User not found")
@@ -69,7 +70,33 @@ const verify = async (req, res,next ) => {
     } catch {
      next(error)
     }
-}
+};
+
+const updateProfile = async (req, res, next) => {
+    try {
+        const userId = req.user.id; 
+        const { username, bio } = req.body;
+        
+        let updateData = { username, bio };
+
+        if (req.file) {
+            updateData.avatar = req.file.filename;
+        }
+
+        const updatedUser = await AuthSchema.findByIdAndUpdate(
+            userId,
+            { $set: updateData },
+            { new: true }
+        ).select("-password -otp -otpTime");
+
+        res.status(200).json({
+            message: "Profile updated",
+            user: updatedUser
+        });
+    } catch (error) {
+        next(error);
+    }
+};
 module.exports = {
     register,
     verify

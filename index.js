@@ -7,6 +7,7 @@ const errorMiddleware = require("./middleware/error.middleware")
 const authRouter = require("./router/auth.routes")
 require("dotenv").config()
 const cookieParser = require("cookie-parser")
+const quoteRouter = require("./router/quote.routes")
 
 const PORT = process.env.PORT || 3000
 
@@ -20,7 +21,7 @@ app.use(cookieParser)
 app.use(authorRouter)
 app.use(bookRouter)
 app.use(authRouter)
-app.use(quo)
+app.use(quoteRouter)
 
 app.use(errorMiddleware)
 

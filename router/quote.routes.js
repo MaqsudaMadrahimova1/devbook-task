@@ -1,7 +1,7 @@
 const {Router} = require("express");
 const { addQuote, searchQuote } = require("../controller/quote.controller");
 
-
+const quoteRouter = Router();
 quoteRouter.post("/",addQuote);
 quoteRouter.get("/search",searchQuote );
 
